@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Atendimento Técnico</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body p-4">
+
+                    <h4 class="mb-4 text-center">Registro de Atendimento Técnico</h4>
+
+                    <form id="formAtendimento">
+
+                        <div class="mb-3">
+                            <label class="form-label">Nome completo do técnico</label>
+                            <input type="text" class="form-control" id="tecnico">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Data de atendimento</label>
+                                <input type="date" class="form-control" id="data">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Horário de chegada</label>
+                                <input type="time" class="form-control" id="chegada">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Horário de saída</label>
+                                <input type="time" class="form-control" id="saida">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Atividade realizada</label>
+                            <textarea class="form-control" id="atividade" rows="4"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label d-block">Equipamento operacional</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="equipamento" value="SIM">
+                                <label class="form-check-label">Sim</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="equipamento" value="NÃO">
+                                <label class="form-check-label">Não</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Usuário que acompanhou o atendimento</label>
+                            <input type="text" class="form-control" id="usuarioAcompanhou">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Usuário que assinou a RAT</label>
+                            <input type="text" class="form-control" id="usuarioAssinou">
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-primary btn-lg" onclick="copiarDados()">
+                                Copiar Dados
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+// Preenchimento automático em tempo real
+document.getElementById("usuarioAcompanhou").addEventListener("input", function () {
+    document.getElementById("usuarioAssinou").value = this.value;
+});
+
+function copiarDados() {
+    const tecnico = document.getElementById("tecnico").value.trim();
+    const data = document.getElementById("data").value;
+    const chegada = document.getElementById("chegada").value;
+    const saida = document.getElementById("saida").value;
+    const atividade = document.getElementById("atividade").value.trim();
+    const usuarioAcompanhou = document.getElementById("usuarioAcompanhou").value.trim();
+    const usuarioAssinou = document.getElementById("usuarioAssinou").value.trim();
+    const equipamento = document.querySelector('input[name="equipamento"]:checked');
+
+    if (
+        !tecnico || !data || !chegada || !saida ||
+        !atividade || !usuarioAcompanhou || !usuarioAssinou || !equipamento
+    ) {
+        alert("Todos os campos precisam ser preenchidos.");
+        return;
+    }
+
+    // Formatar a data para DD/MM/AAAA
+    const dataFormatada = formatarData(data);
+
+    const texto = `
+NOME COMPLETO DO TÉCNICO: ${tecnico}
+DATA DE ATENDIMENTO: ${dataFormatada}
+HORÁRIO DE CHEGADA: ${chegada}
+HORÁRIO DE SAÍDA: ${saida}
+ATIVIDADE REALIZADA: ${atividade}
+EQUIPAMENTO OPERACIONAL: ${equipamento.value}
+USUÁRIO QUE ACOMPANHOU ATENDIMENTO: ${usuarioAcompanhou}
+USUÁRIO QUE ASSINOU A RAT: ${usuarioAssinou}
+    `.toUpperCase().trim();
+
+    navigator.clipboard.writeText(texto);
+
+    // Limpar formulário após copiar
+    document.getElementById("formAtendimento").reset();
+}
+
+function formatarData(dataString) {
+    const data = new Date(dataString);
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês começa do 0
+    const ano = data.getFullYear();
+    
+    return `${dia}/${mes}/${ano}`;
+}
+</script>
+
+</body>
+</html>
