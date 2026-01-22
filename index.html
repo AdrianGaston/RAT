@@ -110,7 +110,7 @@ function copiarDados() {
         return;
     }
 
-    // Formatar a data para DD/MM/AAAA
+    // Formatar data SEM usar Date() (evita bug de fuso horário)
     const dataFormatada = formatarData(data);
 
     const texto = `
@@ -131,11 +131,7 @@ USUÁRIO QUE ASSINOU A RAT: ${usuarioAssinou}
 }
 
 function formatarData(dataString) {
-    const data = new Date(dataString);
-    const dia = String(data.getDate()).padStart(2, '0');
-    const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês começa do 0
-    const ano = data.getFullYear();
-    
+    const [ano, mes, dia] = dataString.split("-");
     return `${dia}/${mes}/${ano}`;
 }
 </script>
